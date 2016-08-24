@@ -35,6 +35,7 @@ class Album implements InputFilterAwareInterface
 		];
 	}
 
+
 	public function setInputFilter(InputFilterInterface $inputFilter)
 	{
 		throw new DomainException(sprintf(
