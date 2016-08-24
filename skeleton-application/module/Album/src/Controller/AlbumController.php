@@ -59,7 +59,7 @@ class AlbumController extends AbstractActionController
 
 	public function editAction()
 	{
-		$id = (int) $this->params()->fromRoute('id', 0);
+		$id = (int)$this->params()->fromRoute('id', 0);
 
 		if (0 === $id) {
 			return $this->redirect()->toRoute('album', ['action' => 'add']);
@@ -81,14 +81,14 @@ class AlbumController extends AbstractActionController
 		$request = $this->getRequest();
 		$viewData = ['id' => $id, 'form' => $form];
 
-		if (! $request->isPost()) {
+		if (!$request->isPost()) {
 			return $viewData;
 		}
 
 		$form->setInputFilter($album->getInputFilter());
 		$form->setData($request->getPost());
 
-		if (! $form->isValid()) {
+		if (!$form->isValid()) {
 			return $viewData;
 		}
 
@@ -100,5 +100,28 @@ class AlbumController extends AbstractActionController
 
 	public function deleteAction()
 	{
+		$id = (int)$this->params()->fromRoute('id', 0);
+		if (!$id) {
+			return $this->redirect()->toRoute('album');
+		}
+
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			$del = $request->getPost('del', 'No');
+
+			if ($del == 'Yes') {
+				$id = (int)$request->getPost('id');
+				$this->table->deleteAlbum($id);
+			}
+
+			// Redirect to list of albums
+			return $this->redirect()->toRoute('album');
+		}
+
+		return [
+			'id' => $id,
+			'album' => $this->table->getAlbum($id),
+		];
+
 	}
 }
